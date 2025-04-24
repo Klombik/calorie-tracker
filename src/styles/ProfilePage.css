@@ -1,0 +1,39 @@
+.profile-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .profile-card {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-info p {
+    margin-bottom: 0.75rem;
+  }
+  
+  .profile-info strong {
+    display: inline-block;
+    width: 150px;
+    color: var(--primary-color);
+  }
+  
+  .profile-actions {
+    margin-top: 1.5rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .btn-secondary {
+    background: #6c757d;
+  }
+  
+  .btn-secondary:hover {
+    background: #5a6268;
+  }

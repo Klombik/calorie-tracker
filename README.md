@@ -11,6 +11,7 @@
 ## Установка и запуск
 ```bash
 npm install
+npm install --save-dev @types/react-bootstrap
 npm start
 ```
 
