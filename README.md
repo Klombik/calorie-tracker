@@ -1,32 +1,100 @@
-# Calorie Tracker
+# Calorie Tracker - Учет калорий и составление диет
 
-Приложение для учёта калорий и составления диеты с использованием современных технологий: React, TypeScript, Webpack и др.
+![Calorie Tracker Screenshot](public/screenshot.png)
 
-## Возможности
-- Ведение дневника питания
-- Просмотр базы продуктов
-- Составление персонального плана диеты
-- Отображение профиля пользователя
+## Описание
 
-## Установка и запуск
+Приложение для учета потребляемых калорий и составления персональных диетических планов. Включает:
+
+- Дневник питания
+- Базу данных продуктов
+- Генератор планов питания
+- Профиль пользователя с расчетом нормы калорий
+
+## Технологии
+
+- Frontend: React, TypeScript, CSS3
+- Backend: Node.js, Express
+- Сборка: Webpack
+
+## Установка
+
+1. Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/yourusername/calorie-tracker.git
+cd calorie-tracker
+```
+
+2. Установите зависимости:
+
 ```bash
 npm install
-npm install --save-dev @types/react-bootstrap
+```
+
+## Настройка окружения
+
+Создайте файл `.env` в корне проекта:
+
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/calorieTracker
+```
+
+## Запуск приложения
+
+### Вариант 1: Только фронтенд (с mock-данными)
+
+```bash
 npm start
 ```
 
-## Сборка
+Приложение будет доступно по адресу: [http://localhost:3000](http://localhost:3000)
+
+### Вариант 2: Полная версия с сервером
+
+1. В первом терминале запустите сервер:
+
 ```bash
-npm run build
+npm run server
 ```
 
-## Технологии
-- HTML5, CSS3
-- JavaScript (ES6+), TypeScript
-- React.js, React Router
-- Node.js, npm
-- Webpack
-- JSON API
-- Git
+2. Во втором терминале запустите клиент:
 
----
+```bash
+npm start
+```
+
+Сервер будет доступен на порту 5000, клиент - на порту 3000.
+
+## Скрипты
+
+- `npm start` - запуск клиента в dev-режиме
+- `npm run server` - запуск сервера
+- `npm run build` - сборка production-версии
+- `npm test` - запуск тестов (пока не настроено)
+
+## Структура проекта
+
+```
+calorie-tracker/
+├── public/            # Статические файлы
+├── src/               # Исходники фронтенда
+│   ├── components/    # React-компоненты
+│   ├── pages/         # Страницы приложения
+│   ├── services/      # API-сервисы
+│   └── styles/        # Стили
+├── server/            # Серверная часть
+│   ├── controllers/   # Контроллеры
+│   ├── models/        # Модели MongoDB
+│   └── routes/        # Маршруты API
+├── .env               # Переменные окружения
+├── package.json       # Зависимости и скрипты
+└── README.md          # Документация
+```
+
+## Требования
+
+- Node.js v16+
+- npm v8+
+- MongoDB (опционально)
