@@ -14,32 +14,47 @@ interface DiaryEntry {
   fats: number;
   date: string;
   mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  servings: number;
 }
 
 const FoodDiaryPage: React.FC = () => {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [totalCalories, setTotalCalories] = useState<number>(0);
+  const [totalProtein, setTotalProtein] = useState<number>(0);
+  const [totalCarbs, setTotalCarbs] = useState<number>(0);
+  const [totalFats, setTotalFats] = useState<number>(0);
+  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
-    fetchDiaryEntries();
+    const fetchData = async () => {
+      try {
+        const [diaryResponse, profileResponse] = await Promise.all([
+          axios.get(`/api/diaries?date=${date}`),
+          axios.get('/api/profile')
+        ]);
+        setEntries(diaryResponse.data);
+        setProfile(profileResponse.data);
+        calculateTotals(diaryResponse.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setEntries([]);
+        calculateTotals([]);
+      }
+    };
+    fetchData();
   }, [date]);
-
-  const fetchDiaryEntries = async () => {
-    try {
-      const response = await axios.get(`/api/diaries?date=${date}`);
-      setEntries(response.data);
-      calculateTotals(response.data);
-    } catch (error) {
-      console.error('Error fetching diary entries:', error);
-      setEntries([]);
-      calculateTotals([]);
-    }
-  };
 
   const calculateTotals = (entries: DiaryEntry[]) => {
     const calories = entries.reduce((sum, entry) => sum + entry.calories, 0);
+    const protein = entries.reduce((sum, entry) => sum + entry.protein, 0);
+    const carbs = entries.reduce((sum, entry) => sum + entry.carbs, 0);
+    const fats = entries.reduce((sum, entry) => sum + entry.fats, 0);
+    
     setTotalCalories(calories);
+    setTotalProtein(protein);
+    setTotalCarbs(carbs);
+    setTotalFats(fats);
   };
 
   const handleAddEntry = async (foodId: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack', servings: number) => {
@@ -68,6 +83,47 @@ const FoodDiaryPage: React.FC = () => {
     }
   };
 
+  const DiarySummary = () => {
+    if (!profile) return null;
+    
+    const remainingCalories = profile.dailyCalorieTarget - totalCalories;
+    const progressPercentage = Math.min((totalCalories / profile.dailyCalorieTarget) * 100, 100);
+    const proteinPercentage = totalProtein * 4 / totalCalories * 100;
+    const carbsPercentage = totalCarbs * 4 / totalCalories * 100;
+    const fatsPercentage = totalFats * 9 / totalCalories * 100;
+
+    return (
+      <div className="summary-card">
+        <h3>Daily Progress</h3>
+        <div className="calorie-progress">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
+          </div>
+          <div className="calorie-numbers">
+            <span>{totalCalories} / {profile.dailyCalorieTarget} kcal</span>
+            <span className={remainingCalories < 0 ? 'negative' : ''}>
+              {remainingCalories} kcal remaining
+            </span>
+          </div>
+        </div>
+        <div className="macronutrients">
+          <div className="macro protein">
+            <span>Protein: {totalProtein}g ({proteinPercentage.toFixed(0)}%)</span>
+          </div>
+          <div className="macro carbs">
+            <span>Carbs: {totalCarbs}g ({carbsPercentage.toFixed(0)}%)</span>
+          </div>
+          <div className="macro fats">
+            <span>Fats: {totalFats}g ({fatsPercentage.toFixed(0)}%)</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="food-diary-page">
       <h2>Food Diary</h2>
@@ -81,10 +137,7 @@ const FoodDiaryPage: React.FC = () => {
         />
       </div>
       
-      <div className="summary-card">
-        <h3>Daily Summary</h3>
-        <p>Total Calories: {totalCalories}</p>
-      </div>
+      <DiarySummary />
       
       <FoodEntryForm onAddEntry={handleAddEntry} />
       

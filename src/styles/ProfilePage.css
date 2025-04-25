@@ -1,39 +1,50 @@
 .profile-page {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .profile-card {
-    background: white;
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profile-info p {
-    margin-bottom: 0.75rem;
-  }
-  
+  padding: 1rem;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info p {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.profile-info strong {
+  min-width: 150px;
+  color: var(--primary-color);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Адаптивные стили */
+@media (max-width: 576px) {
   .profile-info strong {
-    display: inline-block;
-    width: 150px;
-    color: var(--primary-color);
+    min-width: 100px;
   }
   
-  .profile-actions {
-    margin-top: 1.5rem;
+  .form-group input, 
+  .form-group select {
+    width: 100%;
   }
-  
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .btn-secondary {
-    background: #6c757d;
-  }
-  
-  .btn-secondary:hover {
-    background: #5a6268;
-  }
+}

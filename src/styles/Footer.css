@@ -1,37 +1,61 @@
 footer {
-    background-color: var(--dark-color);
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    margin-top: 2rem;
-  }
-  
+  background-color: var(--dark-color);
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.social-links a {
+  color: white;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  padding: 0.3rem;
+}
+
+.social-links a:hover {
+  color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+/* Специфичные цвета для иконок */
+.social-links a:nth-child(1):hover { /* VK */
+  color: #4a76a8;
+}
+.social-links a:nth-child(2):hover { /* Mail */
+  color: #168de2;
+}
+.social-links a:nth-child(3):hover { /* Telegram */
+  color: #2aabee;
+}
+
+@media (max-width: 576px) {
   .footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
   }
   
   .social-links {
-    display: flex;
-    gap: 1rem;
+    margin-top: 0.5rem;
   }
-  
-  .social-links a {
-    color: white;
-    font-size: 1.2rem;
-    transition: color 0.3s;
-  }
-  
-  .social-links a:hover {
-    color: var(--accent-color);
-  }
-  
-  @media (max-width: 576px) {
-    .footer-content {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  }
+}
