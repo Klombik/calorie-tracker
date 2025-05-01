@@ -39,7 +39,7 @@ module.exports = {
       directory: path.join(__dirname, 'public')
     },
     open: true,
-    port: 3001,
+    port: 3000,
     hot: true,
     proxy: {
       '/api': 'http://localhost:5000'

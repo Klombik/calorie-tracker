@@ -45,6 +45,44 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  const calculateCalories = (profileData: Partial<UserProfile>) => {
+    if (!profile || !profileData) return 0;
+    
+    // Use form data if available, otherwise fall back to profile data
+    const weight = profileData.weight ?? profile.weight;
+    const height = profileData.height ?? profile.height;
+    const age = profileData.age ?? profile.age;
+    const gender = profileData.gender ?? profile.gender;
+    const activityLevel = profileData.activityLevel ?? profile.activityLevel;
+    const goal = profileData.goal ?? profile.goal;
+
+    // Basic Harris-Benedict equation for BMR
+    let bmr;
+    if (gender === 'male') {
+      bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+    } else {
+      bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+    }
+    
+    // Activity multiplier
+    const activityMultipliers = {
+      sedentary: 1.2,
+      light: 1.375,
+      moderate: 1.55,
+      active: 1.725,
+      very_active: 1.9
+    };
+    
+    // Goal adjustment
+    const goalAdjustments = {
+      lose_weight: -500,
+      maintain: 0,
+      gain_weight: 500
+    };
+    
+    return Math.round(bmr * activityMultipliers[activityLevel] + goalAdjustments[goal]);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -58,46 +96,19 @@ const ProfilePage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.put('/api/profile', formData);
+      // Calculate new calorie target before saving
+      const updatedData = {
+        ...formData,
+        dailyCalorieTarget: calculateCalories(formData)
+      };
+      
+      const response = await axios.put('/api/profile', updatedData);
       setProfile(response.data);
       setIsEditing(false);
       setFormData({});
     } catch (error) {
       console.error('Error updating profile:', error);
     }
-  };
-
-  const calculateCalories = () => {
-    if (!profile) return 0;
-    
-    // Basic Harris-Benedict equation for BMR
-    let bmr;
-    if (profile.gender === 'male') {
-      bmr = 88.362 + (13.397 * profile.weight) + (4.799 * profile.height) - (5.677 * profile.age);
-    } else {
-      bmr = 447.593 + (9.247 * profile.weight) + (3.098 * profile.height) - (4.330 * profile.age);
-    }
-    
-    // Activity multiplier
-    let activityMultiplier;
-    switch (profile.activityLevel) {
-      case 'sedentary': activityMultiplier = 1.2; break;
-      case 'light': activityMultiplier = 1.375; break;
-      case 'moderate': activityMultiplier = 1.55; break;
-      case 'active': activityMultiplier = 1.725; break;
-      case 'very_active': activityMultiplier = 1.9; break;
-      default: activityMultiplier = 1.2;
-    }
-    
-    // Goal adjustment
-    let goalAdjustment;
-    switch (profile.goal) {
-      case 'lose_weight': goalAdjustment = -500; break;
-      case 'gain_weight': goalAdjustment = 500; break;
-      default: goalAdjustment = 0;
-    }
-    
-    return Math.round(bmr * activityMultiplier + goalAdjustment);
   };
 
   return (
@@ -189,6 +200,15 @@ const ProfilePage: React.FC = () => {
                 </select>
               </div>
               
+              <div className="form-group">
+                <label>Daily Calorie Target:</label>
+                <input
+                  type="number"
+                  value={calculateCalories(formData)}
+                  readOnly
+                />
+              </div>
+              
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary">Save</button>
                 <button 
@@ -211,7 +231,7 @@ const ProfilePage: React.FC = () => {
                 <p><strong>Weight:</strong> {profile.weight} kg</p>
                 <p><strong>Activity Level:</strong> {profile.activityLevel.replace('_', ' ')}</p>
                 <p><strong>Goal:</strong> {profile.goal.replace('_', ' ')}</p>
-                <p><strong>Daily Calorie Target:</strong> {calculateCalories()} kcal</p>
+                <p><strong>Daily Calorie Target:</strong> {profile.dailyCalorieTarget} kcal</p>
               </div>
               
               <div className="profile-actions">

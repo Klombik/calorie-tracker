@@ -44,10 +44,12 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedFood) {
-      onAddEntry(selectedFood, mealType, servings);
-      setSelectedFood('');
-      setSearchTerm('');
-      setServings(1);
+      onAddEntry(
+        selectedFood, 
+        mealType, 
+        Math.round(servings * 100) / 100
+      );
+      // Сброс формы
     }
   };
 

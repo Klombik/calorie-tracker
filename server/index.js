@@ -230,10 +230,10 @@ app.post('/api/diaries', (req, res) => {
     id: Date.now().toString(),
     foodId,
     foodName: food.name,
-    calories: Math.round(food.calories * servings),
-    protein: Math.round(food.protein * servings * 10) / 10,
-    carbs: Math.round(food.carbs * servings * 10) / 10,
-    fats: Math.round(food.fats * servings * 10) / 10,
+    calories: Math.round(food.calories * servings * 100) / 100,
+    protein: Math.round(food.protein * servings * 100) / 100,
+    carbs: Math.round(food.carbs * servings * 100) / 100,
+    fats: Math.round(food.fats * servings * 100) / 100,
     date,
     mealType,
     servings,
@@ -255,14 +255,15 @@ app.get('/api/profile', (req, res) => {
 });
 
 app.put('/api/profile', (req, res) => {
-  // Обновляем профиль
-  profile = { 
-    ...profile, 
+  // Пересчитываем калории при обновлении профиля
+  const updatedProfile = {
+    ...profile,
     ...req.body,
-    // Пересчитываем калории при изменении параметров
     dailyCalorieTarget: calculateDailyCalories({ ...profile, ...req.body })
   };
-  res.json(profile);
+  
+  profile = updatedProfile;
+  res.json(updatedProfile);
 });
 
 // Meal Plans

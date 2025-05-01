@@ -46,15 +46,19 @@ const FoodDiaryPage: React.FC = () => {
   }, [date]);
 
   const calculateTotals = (entries: DiaryEntry[]) => {
-    const calories = entries.reduce((sum, entry) => sum + entry.calories, 0);
-    const protein = entries.reduce((sum, entry) => sum + entry.protein, 0);
-    const carbs = entries.reduce((sum, entry) => sum + entry.carbs, 0);
-    const fats = entries.reduce((sum, entry) => sum + entry.fats, 0);
-    
-    setTotalCalories(calories);
-    setTotalProtein(protein);
-    setTotalCarbs(carbs);
-    setTotalFats(fats);
+    const totals = entries.reduce((acc, entry) => {
+      acc.calories += entry.calories;
+      acc.protein += entry.protein;
+      acc.carbs += entry.carbs;
+      acc.fats += entry.fats;
+      return acc;
+    }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
+
+    // Round to 2 decimal places
+    setTotalCalories(Math.round(totals.calories * 100) / 100);
+    setTotalProtein(Math.round(totals.protein * 100) / 100);
+    setTotalCarbs(Math.round(totals.carbs * 100) / 100);
+    setTotalFats(Math.round(totals.fats * 100) / 100);
   };
 
   const handleAddEntry = async (foodId: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack', servings: number) => {
@@ -86,11 +90,13 @@ const FoodDiaryPage: React.FC = () => {
   const DiarySummary = () => {
     if (!profile) return null;
     
-    const remainingCalories = profile.dailyCalorieTarget - totalCalories;
+    const remainingCalories = Math.round((profile.dailyCalorieTarget - totalCalories) * 100) / 100;
     const progressPercentage = Math.min((totalCalories / profile.dailyCalorieTarget) * 100, 100);
-    const proteinPercentage = totalProtein * 4 / totalCalories * 100;
-    const carbsPercentage = totalCarbs * 4 / totalCalories * 100;
-    const fatsPercentage = totalFats * 9 / totalCalories * 100;
+    
+    // Calculate macronutrient percentages (rounded to nearest integer)
+    const proteinPercentage = totalCalories > 0 ? Math.round((totalProtein * 4 / totalCalories) * 100) : 0;
+    const carbsPercentage = totalCalories > 0 ? Math.round((totalCarbs * 4 / totalCalories) * 100) : 0;
+    const fatsPercentage = totalCalories > 0 ? Math.round((totalFats * 9 / totalCalories) * 100) : 0;
 
     return (
       <div className="summary-card">
@@ -111,13 +117,13 @@ const FoodDiaryPage: React.FC = () => {
         </div>
         <div className="macronutrients">
           <div className="macro protein">
-            <span>Protein: {totalProtein}g ({proteinPercentage.toFixed(0)}%)</span>
+            <span>Protein: {totalProtein}g ({proteinPercentage}%)</span>
           </div>
           <div className="macro carbs">
-            <span>Carbs: {totalCarbs}g ({carbsPercentage.toFixed(0)}%)</span>
+            <span>Carbs: {totalCarbs}g ({carbsPercentage}%)</span>
           </div>
           <div className="macro fats">
-            <span>Fats: {totalFats}g ({fatsPercentage.toFixed(0)}%)</span>
+            <span>Fats: {totalFats}g ({fatsPercentage}%)</span>
           </div>
         </div>
       </div>

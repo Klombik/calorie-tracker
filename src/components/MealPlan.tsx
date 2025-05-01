@@ -55,19 +55,19 @@ const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
       <div className="plan-summary">
         <div className="summary-item">
           <span className="summary-label">Total Calories:</span>
-          <span className="summary-value">{plan.totalCalories} kcal</span>
+          <span className="summary-value">{Math.round(plan.totalCalories * 100) / 100} kcal</span>
         </div>
         <div className="summary-item">
           <span className="summary-label">Protein:</span>
-          <span className="summary-value">{plan.totalProtein}g</span>
+          <span className="summary-value">{Math.round(plan.totalProtein * 100) / 100}g</span>
         </div>
         <div className="summary-item">
           <span className="summary-label">Carbs:</span>
-          <span className="summary-value">{plan.totalCarbs}g</span>
+          <span className="summary-value">{Math.round(plan.totalCarbs * 100) / 100}g</span>
         </div>
         <div className="summary-item">
           <span className="summary-label">Fats:</span>
-          <span className="summary-value">{plan.totalFats}g</span>
+          <span className="summary-value">{Math.round(plan.totalFats * 100) / 100}g</span>
         </div>
       </div>
       
@@ -92,10 +92,10 @@ const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
                       </span>
                     </div>
                     <div className="food-nutrition">
-                      <span>{food.calories} kcal</span>
-                      <span>P: {food.protein}g</span>
-                      <span>C: {food.carbs}g</span>
-                      <span>F: {food.fats}g</span>
+                      <span>{Math.round(food.calories * 100) / 100} kcal</span>
+                      <span>P: {Math.round(food.protein * 100) / 100}g</span>
+                      <span>C: {Math.round(food.carbs * 100) / 100}g</span>
+                      <span>F: {Math.round(food.fats * 100) / 100}g</span>
                     </div>
                   </li>
                 ))}
