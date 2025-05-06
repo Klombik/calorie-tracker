@@ -1,12 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+module.exports = (env) => ({
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: env.GITHUB_PAGES ? '/calorie-tracker/' : '/'
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx']
@@ -31,7 +31,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html'
-    })
+    }),
+    new Dotenv()
   ],
   devServer: {
     historyApiFallback: true,
@@ -45,4 +46,4 @@ module.exports = {
       '/api': 'http://localhost:5000'
     }
   }
-};
+});
