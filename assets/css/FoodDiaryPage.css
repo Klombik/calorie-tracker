@@ -1,0 +1,127 @@
+.food-diary-page {
+  padding: 1rem;
+}
+
+.date-selector {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.date-selector label {
+  font-weight: bold;
+  min-width: 60px;
+}
+
+.summary-card {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.calorie-progress {
+  margin: 1rem 0;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.calorie-numbers {
+  display: flex;
+  justify-content: space-between;
+}
+
+.macronutrients {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.macro {
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  flex: 1;
+  margin: 0 0.25rem;
+}
+
+.macro.protein {
+  background-color: rgba(74, 111, 165, 0.1);
+  border-left: 4px solid var(--primary-color);
+}
+
+.macro.carbs {
+  background-color: rgba(22, 96, 136, 0.1);
+  border-left: 4px solid var(--secondary-color);
+}
+
+.macro.fats {
+  background-color: rgba(79, 195, 247, 0.1);
+  border-left: 4px solid var(--accent-color);
+}
+
+@media (max-width: 768px) {
+  .macronutrients {
+    flex-direction: column;
+  }
+  
+  .macro {
+    margin: 0.25rem 0;
+  }
+}
+
+.meal-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* Адаптивные стили для таблицы записей */
+.entry-header, .entry-item, .entry-totals {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 0.5fr;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .entry-header, .entry-item, .entry-totals {
+    grid-template-columns: 3fr 1fr 1fr 0.5fr;
+  }
+  
+  .entry-header span:nth-child(3),
+  .entry-header span:nth-child(4),
+  .entry-item span:nth-child(3),
+  .entry-item span:nth-child(4),
+  .entry-totals span:nth-child(3),
+  .entry-totals span:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .entry-header, .entry-item, .entry-totals {
+    grid-template-columns: 2fr 1fr 0.5fr;
+  }
+  
+  .entry-header span:nth-child(2),
+  .entry-item span:nth-child(2),
+  .entry-totals span:nth-child(2) {
+    display: none;
+  }
+}
