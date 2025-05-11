@@ -1,6 +1,7 @@
 {
     "name": "calorie-tracker",
     "version": "1.0.0",
+    "homepage": ".", 
     "private": true,
     "dependencies": {
     "@types/react": "^18.2.0",
