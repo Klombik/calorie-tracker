@@ -7,7 +7,7 @@ import FoodDatabasePage from './pages/FoodDatabasePage';
 import ProfilePage from './pages/ProfilePage';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import './styles/main.css';
+import '../assets/css/main.css';
 
 const App: React.FC = () => {
   return (

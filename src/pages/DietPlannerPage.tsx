@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MealPlan from '../components/MealPlan';
-import '../styles/DietPlannerPage.css';
+import '../../assets/css/DietPlannerPage.css';
 
 interface Meal {
   id: string;

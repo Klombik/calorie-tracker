@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/MealPlan.css';
+import '../../assets/css/MealPlan.css';
 
 interface FoodItem {
   foodId: string;

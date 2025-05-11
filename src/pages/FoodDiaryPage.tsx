@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FoodEntryForm from '../components/FoodEntryForm';
 import DiaryEntryList from '../components/DiaryEntryList';
-import '../styles/FoodDiaryPage.css';
+import '../../assets/css/FoodDiaryPage.css';
 
 interface DiaryEntry {
   id: string;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FoodItem from '../components/FoodItem';
 import AddFoodModal from '../components/AddFoodModal';
-import '../styles/FoodDatabasePage.css';
+import '../../assets/css/FoodDatabasePage.css';
 
 interface Food {
   id: string;

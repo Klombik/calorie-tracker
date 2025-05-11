@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/DiaryEntryList.css';
+import '../../assets/css/DiaryEntryList.css';
 
 interface DiaryEntry {
   id: string;

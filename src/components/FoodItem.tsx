@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/FoodItem.css';
+import '../../assets/css/FoodItem.css';
 
 interface FoodItemProps {
   food: {

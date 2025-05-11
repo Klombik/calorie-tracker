@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/AddFoodModal.css';
+import '../../assets/css/AddFoodModal.css';
 
 interface AddFoodModalProps {
   isOpen: boolean;

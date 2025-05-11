@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/FoodEntryForm.css';
+import '../../assets/css/FoodEntryForm.css';
 
 interface Food {
   id: string;
