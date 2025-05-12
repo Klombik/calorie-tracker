@@ -6,7 +6,7 @@ module.exports = (env) => ({
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: env.GITHUB_PAGES ? '/calorie-tracker/' : '/'
+    publicPath: '',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx']
