@@ -41,9 +41,8 @@ let profile = {
   }
 };
 
-// Расчет дневной нормы калорий
+// Utility functions
 function calculateDailyCalories(profile) {
-  // Формула Миффлина-Сан Жеора
   let bmr;
   if (profile.gender === 'male') {
     bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + 5;
@@ -66,21 +65,17 @@ function calculateDailyCalories(profile) {
   };
 
   const calculatedCalories = Math.round(bmr * activityMultipliers[profile.activityLevel] + goalAdjustments[profile.goal]);
-  
-  // Обновляем профиль
+
   profile.dailyCalorieTarget = calculatedCalories;
-  
+
   return calculatedCalories;
 }
 
-// Генерация плана питания
 function generateMealPlan(calorieTarget, macronutrients) {
-  // Расчет целевых значений макронутриентов в граммах
   const proteinGrams = Math.round((calorieTarget * macronutrients.protein / 100) / 4);
   const carbsGrams = Math.round((calorieTarget * macronutrients.carbs / 100) / 4);
   const fatsGrams = Math.round((calorieTarget * macronutrients.fats / 100) / 9);
 
-  // Функция для генерации одного приема пищи
   const generateMeal = (mealName, calorieTarget, proteinTarget, carbsTarget, fatsTarget) => {
     const mealFoods = [];
     let remainingCalories = calorieTarget;
@@ -88,20 +83,16 @@ function generateMealPlan(calorieTarget, macronutrients) {
     let remainingCarbs = carbsTarget;
     let remainingFats = fatsTarget;
 
-    // Фильтруем подходящие продукты
-    const suitableFoods = foods.filter(food => {
-      return food.calories < calorieTarget * 0.7 && 
-             food.protein > 0;
-    }).sort(() => Math.random() - 0.5); // Случайный порядок
+    const suitableFoods = foods.filter(food => food.calories < calorieTarget * 0.7 && food.protein > 0)
+      .sort(() => Math.random() - 0.5);
 
     for (const food of suitableFoods) {
       if (remainingCalories <= 0) break;
 
-      // Рассчитываем оптимальное количество порций
       const maxServings = Math.min(
         Math.floor(remainingCalories / food.calories),
         Math.floor(remainingProtein / food.protein),
-        3 // Максимум 3 порции одного продукта
+        3
       );
 
       if (maxServings > 0) {
@@ -109,7 +100,7 @@ function generateMealPlan(calorieTarget, macronutrients) {
         const foodEntry = {
           foodId: food.id,
           name: food.name,
-          servings: servings,
+          servings,
           calories: Math.round(food.calories * servings),
           protein: Math.round(food.protein * servings * 10) / 10,
           carbs: Math.round(food.carbs * servings * 10) / 10,
@@ -139,54 +130,20 @@ function generateMealPlan(calorieTarget, macronutrients) {
     };
   };
 
-  // Генерируем приемы пищи
-  const breakfast = generateMeal(
-    'Breakfast', 
-    calorieTarget * 0.25,
-    proteinGrams * 0.25,
-    carbsGrams * 0.25,
-    fatsGrams * 0.25
-  );
-
-  const lunch = generateMeal(
-    'Lunch',
-    calorieTarget * 0.35,
-    proteinGrams * 0.35,
-    carbsGrams * 0.35,
-    fatsGrams * 0.35
-  );
-
-  const dinner = generateMeal(
-    'Dinner',
-    calorieTarget * 0.3,
-    proteinGrams * 0.3,
-    carbsGrams * 0.3,
-    fatsGrams * 0.3
-  );
-
-  const snack = generateMeal(
-    'Snack',
-    calorieTarget * 0.1,
-    proteinGrams * 0.1,
-    carbsGrams * 0.1,
-    fatsGrams * 0.1
-  );
-
-  // Собираем общий план
-  const totalCalories = breakfast.calories + lunch.calories + dinner.calories + snack.calories;
-  const totalProtein = breakfast.protein + lunch.protein + dinner.protein + snack.protein;
-  const totalCarbs = breakfast.carbs + lunch.carbs + dinner.carbs + snack.carbs;
-  const totalFats = breakfast.fats + lunch.fats + dinner.fats + snack.fats;
+  const breakfast = generateMeal('Breakfast', calorieTarget * 0.25, proteinGrams * 0.25, carbsGrams * 0.25, fatsGrams * 0.25);
+  const lunch = generateMeal('Lunch', calorieTarget * 0.35, proteinGrams * 0.35, carbsGrams * 0.35, fatsGrams * 0.35);
+  const dinner = generateMeal('Dinner', calorieTarget * 0.3, proteinGrams * 0.3, carbsGrams * 0.3, fatsGrams * 0.3);
+  const snack = generateMeal('Snack', calorieTarget * 0.1, proteinGrams * 0.1, carbsGrams * 0.1, fatsGrams * 0.1);
 
   return {
     id: Date.now().toString(),
     name: `Personalized Plan - ${new Date().toLocaleDateString()}`,
     description: `Custom plan for ${calorieTarget} kcal (P:${macronutrients.protein}%/C:${macronutrients.carbs}%/F:${macronutrients.fats}%)`,
     meals: [breakfast, lunch, dinner, snack],
-    totalCalories,
-    totalProtein,
-    totalCarbs,
-    totalFats,
+    totalCalories: breakfast.calories + lunch.calories + dinner.calories + snack.calories,
+    totalProtein: breakfast.protein + lunch.protein + dinner.protein + snack.protein,
+    totalCarbs: breakfast.carbs + lunch.carbs + dinner.carbs + snack.carbs,
+    totalFats: breakfast.fats + lunch.fats + dinner.fats + snack.fats,
     targets: {
       calories: calorieTarget,
       protein: proteinGrams,
@@ -196,7 +153,11 @@ function generateMealPlan(calorieTarget, macronutrients) {
   };
 }
 
-// API Routes
+// API routes
+
+app.get('/', (req, res) => {
+  res.send('Calorie Tracker API is running.');
+});
 
 // Foods
 app.get('/api/foods', (req, res) => {
@@ -204,11 +165,7 @@ app.get('/api/foods', (req, res) => {
 });
 
 app.post('/api/foods', (req, res) => {
-  const newFood = { 
-    id: Date.now().toString(), 
-    ...req.body,
-    createdAt: new Date().toISOString()
-  };
+  const newFood = { id: Date.now().toString(), ...req.body, createdAt: new Date().toISOString() };
   foods.push(newFood);
   res.status(201).json(newFood);
 });
@@ -223,7 +180,7 @@ app.get('/api/diaries', (req, res) => {
 app.post('/api/diaries', (req, res) => {
   const { foodId, date, mealType, servings = 1 } = req.body;
   const food = foods.find(f => f.id === foodId);
-  
+
   if (!food) return res.status(404).json({ error: 'Food not found' });
 
   const newEntry = {
@@ -255,13 +212,12 @@ app.get('/api/profile', (req, res) => {
 });
 
 app.put('/api/profile', (req, res) => {
-  // Пересчитываем калории при обновлении профиля
   const updatedProfile = {
     ...profile,
     ...req.body,
     dailyCalorieTarget: calculateDailyCalories({ ...profile, ...req.body })
   };
-  
+
   profile = updatedProfile;
   res.json(updatedProfile);
 });
@@ -271,28 +227,25 @@ app.get('/api/meal-plans', (req, res) => {
   res.json(mealPlans);
 });
 
-// В методе POST /api/meal-plans/generate
 app.post('/api/meal-plans/generate', (req, res) => {
   try {
     const { calorieTarget, macronutrients } = req.body;
-    
     if (!calorieTarget || !macronutrients) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    const newPlan = generateMealPlan(
-      calorieTarget,
-      macronutrients
-    );
-    
+    const newPlan = generateMealPlan(calorieTarget, macronutrients);
     mealPlans = [newPlan, ...mealPlans].slice(0, 5);
-    
-    // Всегда возвращаем массив для совместимости
     res.json([newPlan]);
   } catch (error) {
     console.error('Error generating meal plan:', error);
     res.status(500).json({ error: 'Failed to generate meal plan' });
   }
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
 });
 
 // Start server
