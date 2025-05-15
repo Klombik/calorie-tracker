@@ -25,8 +25,8 @@ interface MealPlanProps {
     id: string;
     name: string;
     description: string;
-    meals?: Meal[]; // Делаем meals опциональным
-    foods?: FoodItem[]; // Для обратной совместимости
+    meals?: Meal[];
+    foods?: FoodItem[];
     totalCalories: number;
     totalProtein: number;
     totalCarbs: number;
@@ -35,7 +35,11 @@ interface MealPlanProps {
 }
 
 const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
-  // Обработка как старой, так и новой структуры данных
+  const formatNumber = (num: number) => {
+    const rounded = Math.round(num * 100) / 100;
+    return rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2);
+  };
+
   const mealsToRender = plan.meals || (plan.foods ? [{
     name: 'Combined Meals',
     foods: plan.foods,
@@ -55,19 +59,19 @@ const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
       <div className="plan-summary">
         <div className="summary-item">
           <span className="summary-label">Total Calories:</span>
-          <span className="summary-value">{Math.round(plan.totalCalories * 100) / 100} kcal</span>
+          <span className="summary-value">{formatNumber(plan.totalCalories)} kcal</span>
         </div>
         <div className="summary-item">
           <span className="summary-label">Protein:</span>
-          <span className="summary-value">{Math.round(plan.totalProtein * 100) / 100}g</span>
+          <span className="summary-value">{formatNumber(plan.totalProtein)}g</span>
         </div>
         <div className="summary-item">
           <span className="summary-label">Carbs:</span>
-          <span className="summary-value">{Math.round(plan.totalCarbs * 100) / 100}g</span>
+          <span className="summary-value">{formatNumber(plan.totalCarbs)}g</span>
         </div>
         <div className="summary-item">
           <span className="summary-label">Fats:</span>
-          <span className="summary-value">{Math.round(plan.totalFats * 100) / 100}g</span>
+          <span className="summary-value">{formatNumber(plan.totalFats)}g</span>
         </div>
       </div>
       
@@ -76,10 +80,10 @@ const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
           <div key={mealIndex} className="meal-section">
             <h4>{meal.name}</h4>
             <div className="meal-summary">
-              <span>{meal.calories} kcal</span>
-              <span>P: {meal.protein}g</span>
-              <span>C: {meal.carbs}g</span>
-              <span>F: {meal.fats}g</span>
+              <span>{formatNumber(meal.calories)} kcal</span>
+              <span>P: {formatNumber(meal.protein)}g</span>
+              <span>C: {formatNumber(meal.carbs)}g</span>
+              <span>F: {formatNumber(meal.fats)}g</span>
             </div>
             {meal.foods && meal.foods.length > 0 ? (
               <ul className="food-list">
@@ -92,10 +96,10 @@ const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
                       </span>
                     </div>
                     <div className="food-nutrition">
-                      <span>{Math.round(food.calories * 100) / 100} kcal</span>
-                      <span>P: {Math.round(food.protein * 100) / 100}g</span>
-                      <span>C: {Math.round(food.carbs * 100) / 100}g</span>
-                      <span>F: {Math.round(food.fats * 100) / 100}g</span>
+                      <span>{formatNumber(food.calories)} kcal</span>
+                      <span>P: {formatNumber(food.protein)}g</span>
+                      <span>C: {formatNumber(food.carbs)}g</span>
+                      <span>F: {formatNumber(food.fats)}g</span>
                     </div>
                   </li>
                 ))}

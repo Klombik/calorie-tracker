@@ -8,6 +8,7 @@ interface DiaryEntry {
   protein: number;
   carbs: number;
   fats: number;
+  servings?: number;
 }
 
 interface DiaryEntryListProps {
@@ -17,10 +18,15 @@ interface DiaryEntryListProps {
 }
 
 const DiaryEntryList: React.FC<DiaryEntryListProps> = ({ title, entries, onDelete }) => {
-  const totalCalories = entries.reduce((sum, entry) => sum + entry.calories, 0);
-  const totalProtein = entries.reduce((sum, entry) => sum + entry.protein, 0);
-  const totalCarbs = entries.reduce((sum, entry) => sum + entry.carbs, 0);
-  const totalFats = entries.reduce((sum, entry) => sum + entry.fats, 0);
+  const formatNumber = (num: number) => {
+    const rounded = Math.round(num * 100) / 100;
+    return rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2);
+  };
+
+  const totalCalories = formatNumber(entries.reduce((sum, entry) => sum + entry.calories, 0));
+  const totalProtein = formatNumber(entries.reduce((sum, entry) => sum + entry.protein, 0));
+  const totalCarbs = formatNumber(entries.reduce((sum, entry) => sum + entry.carbs, 0));
+  const totalFats = formatNumber(entries.reduce((sum, entry) => sum + entry.fats, 0));
 
   return (
     <div className="diary-entry-list">
@@ -37,11 +43,14 @@ const DiaryEntryList: React.FC<DiaryEntryListProps> = ({ title, entries, onDelet
           </div>
           {entries.map(entry => (
             <div key={entry.id} className="entry-item">
-              <span>{entry.foodName}</span>
-              <span>{entry.calories}</span>
-              <span>{entry.protein}g</span>
-              <span>{entry.carbs}g</span>
-              <span>{entry.fats}g</span>
+              <div className="food-info">
+                <span className="food-name">{entry.foodName}</span>
+                {entry.servings && <span className="servings">{entry.servings} serving{entry.servings !== 1 ? 's' : ''}</span>}
+              </div>
+              <span>{formatNumber(entry.calories)} kcal</span>
+              <span>{formatNumber(entry.protein)}g</span>
+              <span>{formatNumber(entry.carbs)}g</span>
+              <span>{formatNumber(entry.fats)}g</span>
               <button 
                 className="delete-btn"
                 onClick={() => onDelete(entry.id)}
@@ -52,7 +61,7 @@ const DiaryEntryList: React.FC<DiaryEntryListProps> = ({ title, entries, onDelet
           ))}
           <div className="entry-totals">
             <span>Total:</span>
-            <span>{totalCalories}</span>
+            <span>{totalCalories} kcal</span>
             <span>{totalProtein}g</span>
             <span>{totalCarbs}g</span>
             <span>{totalFats}g</span>
