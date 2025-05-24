@@ -41,7 +41,6 @@ let profile = {
   }
 };
 
-// Расчет дневной нормы калорий
 function calculateDailyCalories(profile) {
   // Формула Миффлина-Сан Жеора
   let bmr;
@@ -66,8 +65,7 @@ function calculateDailyCalories(profile) {
   };
 
   const calculatedCalories = Math.round(bmr * activityMultipliers[profile.activityLevel] + goalAdjustments[profile.goal]);
-  
-  // Обновляем профиль
+
   profile.dailyCalorieTarget = calculatedCalories;
   
   return calculatedCalories;
@@ -195,9 +193,6 @@ function generateMealPlan(calorieTarget, macronutrients) {
     }
   };
 }
-
-// API Routes
-
 // Foods
 app.get('/api/foods', (req, res) => {
   res.json(foods);
@@ -271,7 +266,6 @@ app.get('/api/meal-plans', (req, res) => {
   res.json(mealPlans);
 });
 
-// В методе POST /api/meal-plans/generate
 app.post('/api/meal-plans/generate', (req, res) => {
   try {
     const { calorieTarget, macronutrients } = req.body;
@@ -287,7 +281,6 @@ app.post('/api/meal-plans/generate', (req, res) => {
     
     mealPlans = [newPlan, ...mealPlans].slice(0, 5);
     
-    // Всегда возвращаем массив для совместимости
     res.json([newPlan]);
   } catch (error) {
     console.error('Error generating meal plan:', error);

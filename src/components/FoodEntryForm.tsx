@@ -25,7 +25,6 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
         setFoods(response.data);
       } catch (error) {
         console.error('Error fetching foods:', error);
-        // Fallback mock data
         setFoods([
           { id: '1', name: 'Apple' },
           { id: '2', name: 'Banana' },
@@ -49,7 +48,6 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
         mealType, 
         Math.round(servings * 100) / 100
       );
-      // Сброс формы
     }
   };
 

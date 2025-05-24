@@ -53,7 +53,7 @@ const DietPlannerPage: React.FC = () => {
           axios.get('/api/profile')
         ]);
         
-        // Добавляем проверку на наличие данных
+        //проверка на наличие данных
         const plans = Array.isArray(plansResponse.data) ? plansResponse.data : [];
         setMealPlans(plans);
         setProfile(profileResponse.data || {
@@ -89,7 +89,7 @@ const DietPlannerPage: React.FC = () => {
         macronutrients: profile.macronutrients
       });
       
-      // Добавляем проверку на наличие данных
+      // проверка на наличие данных
       const newPlan = response.data && response.data[0] ? response.data[0] : null;
       if (newPlan) {
         setMealPlans([newPlan, ...mealPlans].slice(0, 5));

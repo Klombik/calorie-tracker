@@ -25,8 +25,8 @@ interface MealPlanProps {
     id: string;
     name: string;
     description: string;
-    meals?: Meal[]; // Делаем meals опциональным
-    foods?: FoodItem[]; // Для обратной совместимости
+    meals?: Meal[];
+    foods?: FoodItem[];
     totalCalories: number;
     totalProtein: number;
     totalCarbs: number;
@@ -35,9 +35,13 @@ interface MealPlanProps {
 }
 
 const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
-  // Обработка как старой, так и новой структуры данных
+  const formatNumber = (num: number) => {
+    const rounded = Math.round(num * 100) / 100;
+    return rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2);
+  };
+
   const mealsToRender = plan.meals || (plan.foods ? [{
-    name: 'Combined Meals',
+    name: 'Прием пищи',
     foods: plan.foods,
     calories: plan.totalCalories,
     protein: plan.totalProtein,
@@ -51,62 +55,56 @@ const MealPlan: React.FC<MealPlanProps> = ({ plan }) => {
         <h3>{plan.name}</h3>
         <p className="plan-description">{plan.description}</p>
       </div>
-      
+
       <div className="plan-summary">
-        <div className="summary-item">
-          <span className="summary-label">Total Calories:</span>
-          <span className="summary-value">{Math.round(plan.totalCalories * 100) / 100} kcal</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">Protein:</span>
-          <span className="summary-value">{Math.round(plan.totalProtein * 100) / 100}g</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">Carbs:</span>
-          <span className="summary-value">{Math.round(plan.totalCarbs * 100) / 100}g</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">Fats:</span>
-          <span className="summary-value">{Math.round(plan.totalFats * 100) / 100}g</span>
-        </div>
+        <div><strong>Calories:</strong> {formatNumber(plan.totalCalories)} kcal</div>
+        <div><strong>Protein:</strong> {formatNumber(plan.totalProtein)} g</div>
+        <div><strong>Carbs:</strong> {formatNumber(plan.totalCarbs)} g</div>
+        <div><strong>Fats:</strong> {formatNumber(plan.totalFats)} g</div>
       </div>
-      
+
       {mealsToRender.length > 0 ? (
         mealsToRender.map((meal, mealIndex) => (
           <div key={mealIndex} className="meal-section">
             <h4>{meal.name}</h4>
-            <div className="meal-summary">
-              <span>{meal.calories} kcal</span>
-              <span>P: {meal.protein}g</span>
-              <span>C: {meal.carbs}g</span>
-              <span>F: {meal.fats}g</span>
-            </div>
-            {meal.foods && meal.foods.length > 0 ? (
-              <ul className="food-list">
+
+            <table className="meal-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Portions</th>
+                  <th>Calories</th>
+                  <th>Protein</th>
+                  <th>Carbs</th>
+                  <th>Fats</th>
+                </tr>
+              </thead>
+              <tbody>
                 {meal.foods.map((food, foodIndex) => (
-                  <li key={foodIndex} className="food-item">
-                    <div className="food-info">
-                      <span className="food-name">{food.name}</span>
-                      <span className="food-servings">
-                        {food.servings} serving{food.servings !== 1 ? 's' : ''}
-                      </span>
-                    </div>
-                    <div className="food-nutrition">
-                      <span>{Math.round(food.calories * 100) / 100} kcal</span>
-                      <span>P: {Math.round(food.protein * 100) / 100}g</span>
-                      <span>C: {Math.round(food.carbs * 100) / 100}g</span>
-                      <span>F: {Math.round(food.fats * 100) / 100}g</span>
-                    </div>
-                  </li>
+                  <tr key={foodIndex}>
+                    <td>{food.name}</td>
+                    <td>{food.servings}</td>
+                    <td>{formatNumber(food.calories)} kcal</td>
+                    <td>{formatNumber(food.protein)} g</td>
+                    <td>{formatNumber(food.carbs)} g</td>
+                    <td>{formatNumber(food.fats)} g</td>
+                  </tr>
                 ))}
-              </ul>
-            ) : (
-              <p className="no-foods">No foods in this meal</p>
-            )}
+              </tbody>
+              <tfoot>
+                <tr className="meal-total-row">
+                  <td colSpan={2}><strong>Total:</strong></td>
+                  <td><strong>{formatNumber(meal.calories)} kcal</strong></td>
+                  <td><strong>{formatNumber(meal.protein)} g</strong></td>
+                  <td><strong>{formatNumber(meal.carbs)} g</strong></td>
+                  <td><strong>{formatNumber(meal.fats)} g</strong></td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
         ))
       ) : (
-        <p className="no-meals">No meals planned</p>
+        <p className="no-meals">There are no scheduled meals</p>
       )}
     </div>
   );

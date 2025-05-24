@@ -17,10 +17,22 @@ const FoodItem: React.FC<FoodItemProps> = ({ food }) => {
     <div className="food-item">
       <div className="food-name">{food.name}</div>
       <div className="food-nutrition">
-        <span>{food.calories} kcal</span>
-        <span>P: {food.protein}g</span>
-        <span>C: {food.carbs}g</span>
-        <span>F: {food.fats}g</span>
+        <div className="nutrition-block">
+          <strong>Calories:</strong>
+          <span>{food.calories} kcal</span>
+        </div>
+        <div className="nutrition-block">
+          <strong>Protein:</strong>
+          <span>{food.protein} g</span>
+        </div>
+        <div className="nutrition-block">
+          <strong>Carbs:</strong>
+          <span>{food.carbs} g</span>
+        </div>
+        <div className="nutrition-block">
+          <strong>Fats:</strong>
+          <span>{food.fats} g</span>
+        </div>
       </div>
     </div>
   );

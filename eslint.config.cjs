@@ -8,13 +8,11 @@ module.exports = tseslint.config(
         ignores: ['**/*.config.js'],
         languageOptions: {
             globals: {
-                // Вручную определяем необходимые глобальные переменные
                 document: 'readonly',
                 window: 'readonly',
                 localStorage: 'readonly',
                 setTimeout: 'readonly',
                 CustomEvent: 'readonly',
-                // Добавьте другие необходимые глобальные переменные
             },
             parserOptions: {
                 ecmaFeatures: {

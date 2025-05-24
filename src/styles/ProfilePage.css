@@ -1,50 +1,135 @@
+:root {
+  --primary-color: #4e91fc;
+  --secondary-color: #f0f4f8;
+  --border-radius: 1rem;
+  --transition: all 0.3s ease;
+}
+
 .profile-page {
+  max-width: 800px;
+  margin: 2rem auto;
   padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--primary-color);
 }
 
 .profile-card {
   background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: var(--transition);
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
 .profile-info p {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-wrap: wrap;
+  font-size: 1rem;
 }
 
 .profile-info strong {
-  min-width: 150px;
+  min-width: 160px;
+  font-weight: 600;
   color: var(--primary-color);
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.75rem;
+  background: #f9fafb;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  background: white;
 }
 
 .form-actions {
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
-/* Адаптивные стили */
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #3b7be0;
+}
+
+.btn-secondary {
+  background: #e0e7ef;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #d2dee9;
+}
+
+.profile-actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+/* Mobile */
 @media (max-width: 576px) {
+  .profile-card {
+    padding: 1rem;
+  }
+
   .profile-info strong {
     min-width: 100px;
   }
-  
-  .form-group input, 
+
+  .form-group input,
   .form-group select {
     width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
   }
 }

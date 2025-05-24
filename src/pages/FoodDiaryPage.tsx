@@ -54,7 +54,6 @@ const FoodDiaryPage: React.FC = () => {
       return acc;
     }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
 
-    // Round to 2 decimal places
     setTotalCalories(Math.round(totals.calories * 100) / 100);
     setTotalProtein(Math.round(totals.protein * 100) / 100);
     setTotalCarbs(Math.round(totals.carbs * 100) / 100);
@@ -92,8 +91,6 @@ const FoodDiaryPage: React.FC = () => {
     
     const remainingCalories = Math.round((profile.dailyCalorieTarget - totalCalories) * 100) / 100;
     const progressPercentage = Math.min((totalCalories / profile.dailyCalorieTarget) * 100, 100);
-    
-    // Calculate macronutrient percentages (rounded to nearest integer)
     const proteinPercentage = totalCalories > 0 ? Math.round((totalProtein * 4 / totalCalories) * 100) : 0;
     const carbsPercentage = totalCalories > 0 ? Math.round((totalCarbs * 4 / totalCalories) * 100) : 0;
     const fatsPercentage = totalCalories > 0 ? Math.round((totalFats * 9 / totalCalories) * 100) : 0;

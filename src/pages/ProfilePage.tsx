@@ -8,8 +8,8 @@ interface UserProfile {
   email: string;
   age: number;
   gender: 'male' | 'female' | 'other';
-  height: number; // in cm
-  weight: number; // in kg
+  height: number;
+  weight: number;
   activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
   goal: 'lose_weight' | 'maintain' | 'gain_weight';
   dailyCalorieTarget: number;
@@ -47,8 +47,6 @@ const ProfilePage: React.FC = () => {
 
   const calculateCalories = (profileData: Partial<UserProfile>) => {
     if (!profile || !profileData) return 0;
-    
-    // Use form data if available, otherwise fall back to profile data
     const weight = profileData.weight ?? profile.weight;
     const height = profileData.height ?? profile.height;
     const age = profileData.age ?? profile.age;
@@ -56,7 +54,6 @@ const ProfilePage: React.FC = () => {
     const activityLevel = profileData.activityLevel ?? profile.activityLevel;
     const goal = profileData.goal ?? profile.goal;
 
-    // Basic Harris-Benedict equation for BMR
     let bmr;
     if (gender === 'male') {
       bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
@@ -64,7 +61,6 @@ const ProfilePage: React.FC = () => {
       bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
     }
     
-    // Activity multiplier
     const activityMultipliers = {
       sedentary: 1.2,
       light: 1.375,
@@ -73,7 +69,6 @@ const ProfilePage: React.FC = () => {
       very_active: 1.9
     };
     
-    // Goal adjustment
     const goalAdjustments = {
       lose_weight: -500,
       maintain: 0,
@@ -96,7 +91,6 @@ const ProfilePage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Calculate new calorie target before saving
       const updatedData = {
         ...formData,
         dailyCalorieTarget: calculateCalories(formData)
@@ -224,14 +218,13 @@ const ProfilePage: React.FC = () => {
             <>
               <div className="profile-info">
                 <p><strong>Name:</strong> {profile.name}</p>
-                <p><strong>Email:</strong> {profile.email}</p>
                 <p><strong>Age:</strong> {profile.age}</p>
                 <p><strong>Gender:</strong> {profile.gender}</p>
                 <p><strong>Height:</strong> {profile.height} cm</p>
                 <p><strong>Weight:</strong> {profile.weight} kg</p>
                 <p><strong>Activity Level:</strong> {profile.activityLevel.replace('_', ' ')}</p>
                 <p><strong>Goal:</strong> {profile.goal.replace('_', ' ')}</p>
-                <p><strong>Daily Calorie Target:</strong> {profile.dailyCalorieTarget} kcal</p>
+                <p><strong>Daily Calorie Target:  </strong> {profile.dailyCalorieTarget} kcal</p>
               </div>
               
               <div className="profile-actions">
