@@ -17,6 +17,7 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
   const [mealType, setMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snack'>('breakfast');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [servings, setServings] = useState<number>(1);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -25,7 +26,6 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
         setFoods(response.data);
       } catch (error) {
         console.error('Error fetching foods:', error);
-        // Fallback mock data
         setFoods([
           { id: '1', name: 'Apple' },
           { id: '2', name: 'Banana' },
@@ -43,14 +43,23 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedFood) {
-      onAddEntry(
-        selectedFood, 
-        mealType, 
-        Math.round(servings * 100) / 100
-      );
-      // Сброс формы
+    
+    // Валидация
+    if (!selectedFood || !foods.some(f => f.id === selectedFood)) {
+      setError('Please select a valid food from the list');
+      return;
     }
+    
+    if (servings <= 0 || isNaN(servings)) {
+      setError('Please enter a valid number of servings');
+      return;
+    }
+
+    setError(null);
+    onAddEntry(selectedFood, mealType, Math.round(servings * 100) / 100);
+    setSelectedFood('');
+    setSearchTerm('');
+    setServings(1);
   };
 
   return (
@@ -78,6 +87,7 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
             step="0.1"
             value={servings}
             onChange={(e) => setServings(parseFloat(e.target.value))}
+            className={error?.includes('servings') ? 'error-input' : ''}
           />
         </div>
         
@@ -87,9 +97,15 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
             type="text"
             placeholder="Type to search foods..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setSelectedFood('');
+              setError(null);
+            }}
           />
         </div>
+        
+        {error && <div className="error-message">{error}</div>}
         
         {searchTerm && (
           <div className="food-search-results">
@@ -98,7 +114,10 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
                 <div 
                   key={food.id} 
                   className={`food-option ${selectedFood === food.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedFood(food.id)}
+                  onClick={() => {
+                    setSelectedFood(food.id);
+                    setError(null);
+                  }}
                 >
                   {food.name}
                 </div>
@@ -112,7 +131,7 @@ const FoodEntryForm: React.FC<FoodEntryFormProps> = ({ onAddEntry }) => {
         <button 
           type="submit" 
           className="btn btn-primary"
-          disabled={!selectedFood}
+          disabled={!selectedFood || !!error}
         >
           Add to Diary
         </button>

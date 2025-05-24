@@ -29,7 +29,6 @@
     min-height: 100vh;
   }
 
-  /* Адаптивные размеры шрифтов */
 @media (max-width: 576px) {
   html {
     font-size: 14px;
@@ -48,11 +47,10 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding-bottom: 70px; /* Высота футера + небольшой отступ */
-    min-height: calc(100vh - 70px); /* 100vh минус высота футера */
+    padding-bottom: 60px;
+    min-height: calc(100vh - 70px);
   }
   
-  /* Navigation styles */
   .navbar {
     background-color: var(--primary-color);
     padding: 1rem 2rem;
@@ -99,7 +97,6 @@
     margin-right: 0.5rem;
   }
   
-  /* Footer styles */
   footer {
     background-color: var(--dark-color);
     color: white;
@@ -108,7 +105,6 @@
     margin-top: 2rem;
   }
   
-  /* Common styles */
   .card {
     background: white;
     border-radius: 8px;
@@ -145,8 +141,7 @@
     border-radius: 4px;
     font-size: 1rem;
   }
-  
-  /* Responsive */
+
   @media (max-width: 768px) {
     .navbar-container {
       flex-direction: column;
@@ -161,7 +156,6 @@
     }
   }
 
-  /* Мобильные устройства (портретная ориентация) */
 @media (max-width: 576px) {
   .main-content {
     padding: 0.5rem;
@@ -172,14 +166,12 @@
   }
 }
 
-/* Планшеты и небольшие ноутбуки */
 @media (min-width: 577px) and (max-width: 992px) {
   .main-content {
     padding: 1rem;
   }
 }
 
-/* Большие экраны */
 @media (min-width: 1200px) {
   .main-content {
     padding: 2rem;

@@ -17,6 +17,13 @@ interface DiaryEntry {
   servings: number;
 }
 
+interface Profile {
+  dailyCalorieTarget: number;
+  proteinTarget: number;
+  carbsTarget: number;
+  fatsTarget: number;
+}
+
 const FoodDiaryPage: React.FC = () => {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -24,7 +31,7 @@ const FoodDiaryPage: React.FC = () => {
   const [totalProtein, setTotalProtein] = useState<number>(0);
   const [totalCarbs, setTotalCarbs] = useState<number>(0);
   const [totalFats, setTotalFats] = useState<number>(0);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +61,6 @@ const FoodDiaryPage: React.FC = () => {
       return acc;
     }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
 
-    // Round to 2 decimal places
     setTotalCalories(Math.round(totals.calories * 100) / 100);
     setTotalProtein(Math.round(totals.protein * 100) / 100);
     setTotalCarbs(Math.round(totals.carbs * 100) / 100);
@@ -88,47 +94,73 @@ const FoodDiaryPage: React.FC = () => {
   };
 
   const DiarySummary = () => {
-    if (!profile) return null;
-    
-    const remainingCalories = Math.round((profile.dailyCalorieTarget - totalCalories) * 100) / 100;
-    const progressPercentage = Math.min((totalCalories / profile.dailyCalorieTarget) * 100, 100);
-    
-    // Calculate macronutrient percentages (rounded to nearest integer)
-    const proteinPercentage = totalCalories > 0 ? Math.round((totalProtein * 4 / totalCalories) * 100) : 0;
-    const carbsPercentage = totalCalories > 0 ? Math.round((totalCarbs * 4 / totalCalories) * 100) : 0;
-    const fatsPercentage = totalCalories > 0 ? Math.round((totalFats * 9 / totalCalories) * 100) : 0;
+  if (!profile) return null;
+  
+  // Добавляем fallback значения, если targets не установлены
+  const proteinTarget = profile.proteinTarget || calculateDefaultTarget(profile.dailyCalorieTarget, 'protein');
+  const carbsTarget = profile.carbsTarget || calculateDefaultTarget(profile.dailyCalorieTarget, 'carbs');
+  const fatsTarget = profile.fatsTarget || calculateDefaultTarget(profile.dailyCalorieTarget, 'fats');
 
-    return (
-      <div className="summary-card">
-        <h3>Daily Progress</h3>
-        <div className="calorie-progress">
-          <div className="progress-bar">
-            <div 
-              className="progress-fill"
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
-          </div>
-          <div className="calorie-numbers">
-            <span>{totalCalories} / {profile.dailyCalorieTarget} kcal</span>
-            <span className={remainingCalories < 0 ? 'negative' : ''}>
-              {remainingCalories} kcal remaining
-            </span>
-          </div>
+  const remainingCalories = Math.round((profile.dailyCalorieTarget - totalCalories) * 100) / 100;
+  const progressPercentage = Math.min((totalCalories / profile.dailyCalorieTarget) * 100, 100);
+  
+  // Правильный расчёт процентов
+  const proteinPercentage = proteinTarget > 0 
+    ? Math.round((totalProtein / proteinTarget) * 100)
+    : 0;
+  const carbsPercentage = carbsTarget > 0 
+    ? Math.round((totalCarbs / carbsTarget) * 100)
+    : 0;
+  const fatsPercentage = fatsTarget > 0 
+    ? Math.round((totalFats / fatsTarget) * 100)
+    : 0;
+
+  return (
+    <div className="summary-card">
+      <h3>Daily Progress</h3>
+      <div className="calorie-progress">
+        <div className="progress-bar">
+          <div 
+            className="progress-fill"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
         </div>
-        <div className="macronutrients">
-          <div className="macro protein">
-            <span>Protein: {totalProtein}g ({proteinPercentage}%)</span>
-          </div>
-          <div className="macro carbs">
-            <span>Carbs: {totalCarbs}g ({carbsPercentage}%)</span>
-          </div>
-          <div className="macro fats">
-            <span>Fats: {totalFats}g ({fatsPercentage}%)</span>
-          </div>
+        <div className="calorie-numbers">
+          <span>{totalCalories} / {profile.dailyCalorieTarget} kcal</span>
+          <span className={remainingCalories < 0 ? 'negative' : ''}>
+            {remainingCalories} kcal remaining
+          </span>
         </div>
       </div>
-    );
+      <div className="macronutrients">
+        <div className="macro protein">
+          <span>Protein: {totalProtein}g ({proteinPercentage}% of {proteinTarget}g)</span>
+        </div>
+        <div className="macro carbs">
+          <span>Carbs: {totalCarbs}g ({carbsPercentage}% of {carbsTarget}g)</span>
+        </div>
+        <div className="macro fats">
+          <span>Fats: {totalFats}g ({fatsPercentage}% of {fatsTarget}g)</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Вспомогательная функция для расчета стандартных значений
+const calculateDefaultTarget = (calories: number, macro: 'protein' | 'carbs' | 'fats') => {
+  // Стандартные соотношения: 30% белка, 40% углеводов, 30% жиров
+  const percentage = {
+    protein: 0.3,
+    carbs: 0.4,
+    fats: 0.3
   };
+  
+  // Калории на грамм: 4 для белка и углеводов, 9 для жиров
+  const caloriesPerGram = macro === 'fats' ? 9 : 4;
+  
+  return Math.round((calories * percentage[macro]) / caloriesPerGram);
+};
 
   return (
     <div className="food-diary-page">

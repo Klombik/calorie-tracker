@@ -9,6 +9,7 @@ interface DiaryEntry {
   carbs: number;
   fats: number;
   servings?: number;
+  mealType?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
 }
 
 interface DiaryEntryListProps {
@@ -19,14 +20,20 @@ interface DiaryEntryListProps {
 
 const DiaryEntryList: React.FC<DiaryEntryListProps> = ({ title, entries, onDelete }) => {
   const formatNumber = (num: number) => {
-    const rounded = Math.round(num * 100) / 100;
-    return rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2);
+    // Форматирование чисел с учетом локали пользователя
+    return new Intl.NumberFormat(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: num % 1 === 0 ? 0 : 2
+    }).format(num);
   };
 
-  const totalCalories = formatNumber(entries.reduce((sum, entry) => sum + entry.calories, 0));
-  const totalProtein = formatNumber(entries.reduce((sum, entry) => sum + entry.protein, 0));
-  const totalCarbs = formatNumber(entries.reduce((sum, entry) => sum + entry.carbs, 0));
-  const totalFats = formatNumber(entries.reduce((sum, entry) => sum + entry.fats, 0));
+  const totals = entries.reduce((acc, entry) => {
+    acc.calories += entry.calories;
+    acc.protein += entry.protein;
+    acc.carbs += entry.carbs;
+    acc.fats += entry.fats;
+    return acc;
+  }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
 
   return (
     <div className="diary-entry-list">
@@ -34,42 +41,51 @@ const DiaryEntryList: React.FC<DiaryEntryListProps> = ({ title, entries, onDelet
       {entries.length > 0 ? (
         <>
           <div className="entry-header">
-            <span>Food</span>
-            <span>Calories</span>
-            <span>Protein</span>
-            <span>Carbs</span>
-            <span>Fats</span>
-            <span>Action</span>
+            <span className="header-food">Food</span>
+            <span className="header-calories">Calories</span>
+            <span className="header-protein">Protein</span>
+            <span className="header-carbs">Carbs</span>
+            <span className="header-fats">Fats</span>
+            <span className="header-action">Action</span>
           </div>
-          {entries.map(entry => (
-            <div key={entry.id} className="entry-item">
-              <div className="food-info">
-                <span className="food-name">{entry.foodName}</span>
-                {entry.servings && <span className="servings">{entry.servings} serving{entry.servings !== 1 ? 's' : ''}</span>}
+          
+          <div className="entries-container">
+            {entries.map(entry => (
+              <div key={entry.id} className="entry-item">
+                <div className="food-info">
+                  <span className="food-name">{entry.foodName}</span>
+                  {entry.servings && (
+                    <span className="servings">
+                      ({formatNumber(entry.servings)} serving{entry.servings !== 1 ? 's' : ''})
+                    </span>
+                  )}
+                </div>
+                <span className="calories">{formatNumber(entry.calories)} kcal</span>
+                <span className="protein">{formatNumber(entry.protein)}g</span>
+                <span className="carbs">{formatNumber(entry.carbs)}g</span>
+                <span className="fats">{formatNumber(entry.fats)}g</span>
+                <button 
+                  className="delete-btn"
+                  onClick={() => onDelete(entry.id)}
+                  aria-label={`Delete ${entry.foodName}`}
+                >
+                  <i className="fas fa-trash"></i>
+                </button>
               </div>
-              <span>{formatNumber(entry.calories)} kcal</span>
-              <span>{formatNumber(entry.protein)}g</span>
-              <span>{formatNumber(entry.carbs)}g</span>
-              <span>{formatNumber(entry.fats)}g</span>
-              <button 
-                className="delete-btn"
-                onClick={() => onDelete(entry.id)}
-              >
-                <i className="fas fa-trash"></i>
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
+
           <div className="entry-totals">
-            <span>Total:</span>
-            <span>{totalCalories} kcal</span>
-            <span>{totalProtein}g</span>
-            <span>{totalCarbs}g</span>
-            <span>{totalFats}g</span>
-            <span></span>
+            <span className="total-label">Total:</span>
+            <span className="total-calories">{formatNumber(totals.calories)} kcal</span>
+            <span className="total-protein">{formatNumber(totals.protein)}g</span>
+            <span className="total-carbs">{formatNumber(totals.carbs)}g</span>
+            <span className="total-fats">{formatNumber(totals.fats)}g</span>
+            <span className="total-spacer"></span>
           </div>
         </>
       ) : (
-        <p>No entries for this meal.</p>
+        <p className="no-entries">No entries for {title.toLowerCase()}.</p>
       )}
     </div>
   );
