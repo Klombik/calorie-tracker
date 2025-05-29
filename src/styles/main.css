@@ -40,15 +40,21 @@
     flex-direction: column;
     min-height: 100vh;
   }
-  
+
   .main-content {
     flex: 1;
     padding: 1rem;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding-bottom: 60px;
-    min-height: calc(100vh - 70px);
+  }
+
+  footer {
+    background-color: var(--dark-color);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
   }
   
   .navbar {
@@ -95,14 +101,6 @@
   
   .nav-link i {
     margin-right: 0.5rem;
-  }
-  
-  footer {
-    background-color: var(--dark-color);
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    margin-top: 2rem;
   }
   
   .card {

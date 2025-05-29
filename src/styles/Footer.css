@@ -4,7 +4,6 @@ footer {
   text-align: center;
   padding: 1rem 0;
   width: 100%;
-  margin-top: auto;
 }
 
 .footer-content {
@@ -33,7 +32,6 @@ footer {
   transform: translateY(-2px);
 }
 
-/* Специфичные цвета для иконок */
 .social-links a:nth-child(1):hover { /* VK */
   color: #4a76a8;
 }

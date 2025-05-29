@@ -17,6 +17,8 @@ jobs:
       run: npm install
     - name: Run tests
       run: npm test || echo "Tests skipped"
+    - name: Run tests
+      run: npm run cypress:open
 
   build:
     runs-on: ubuntu-latest

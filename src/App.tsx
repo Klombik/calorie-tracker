@@ -5,6 +5,7 @@ import FoodDiaryPage from './pages/FoodDiaryPage';
 import DietPlannerPage from './pages/DietPlannerPage';
 import FoodDatabasePage from './pages/FoodDatabasePage';
 import ProfilePage from './pages/ProfilePage';
+import NotFoundPage from './pages/NotFoundPage';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import './styles/main.css';
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Route path="/planner" element={<DietPlannerPage />} />
           <Route path="/database" element={<FoodDatabasePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />
